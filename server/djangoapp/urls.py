@@ -15,11 +15,11 @@ path('about/', views.about_page, name='about'),
     # path for contact us view
 path('contact/', views.contact_page, name='contact'),
     # path for registration
-
+path('signup/', views.registration_request, name='signup'),
     # path for login
-
+path('login/', views.login_view, name='login'),
     # path for logout
-
+path('logout/', views.logout_view, name='logout'),
     # path for dealer reviews view
 
     # path for add a review view
