@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from datetime import datetime
 import logging
@@ -31,9 +32,11 @@ def login_view(request):
             login(request, user)
             # Redirect to a success page or wherever you want
             return redirect('djangoapp/index.html')  # Replace 'home' with the name of your home page URL
+            print("Success")
         else:
             # If authentication fails, display an error message
             messages.error(request, 'Invalid username or password.')
+            print("Error")
     # If the request method is GET or authentication fails, render the login page
     return render(request, 'djangoapp/login.html')  # Replace 'login.html' with the path to your login template
 
@@ -51,10 +54,12 @@ def registration_request(request):
             user = form.save()
             login(request, user)
             # Redirect to a success page or wherever you want
-            return redirect('djangoapp/index.html')  # Replace 'home' with the name of your home page URL
+            return redirect('index.html')  # Assuming 'index' is the URL pattern name for the index page
+            print("Success")
     else:
         form = UserCreationForm()
-    return render(request, 'djangoapp/registration.html', {'form': form})  # Replace 'signup.html' with the path to your signup template
+        print("Registration Error")
+    return render(request, 'djangoapp/registration.html', {'form': form})
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
