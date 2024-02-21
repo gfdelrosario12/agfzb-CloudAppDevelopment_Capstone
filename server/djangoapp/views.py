@@ -63,15 +63,48 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
-    context = {}
     if request.method == "GET":
-        return render(request, 'djangoapp/index.html', context)
+        url = "http://127.0.0.1:8000//dealerships/get"
+        # Get dealers from the URL
+        dealerships = get_dealers_from_cf("https://bd477862-4c69-452f-8486-783b6bb3189a-bluemix.cloudantnosqldb.appdomain.cloud")
+        # Concat all dealer's short name
+        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # Return a list of dealer short name
+        return HttpResponse(dealer_names)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
 # ...
 
-# Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
+@login_required
+def add_review(request, dealer_id):
+    if request.method == 'POST':
+        review_text = request.POST.get('review_text')
+        if review_text:
+            url = "http://127.0.0.1:8000/add_review"  # Adjust the URL accordingly
+            review = {
+                "time": datetime.utcnow().isoformat(),
+                "name": request.user.username,
+                "dealership": dealer_id,
+                "review": review_text,
+                "purchase": False  # Adjust this value based on your requirements
+            }
+            json_payload = {
+                "review": review
+            }
+            response = post_request(url, json_payload, dealerId=dealer_id)
+            if response.status_code == 200:
+                messages.success(request, 'Review submitted successfully.')
+                return redirect('dealer_details', dealer_id=dealer_id)
+            else:
+                messages.error(request, 'Failed to submit review.')
+        else:
+            messages.error(request, 'Review text is required.')
+    else:
+        messages.error(request, 'Invalid request method.')
+    # Redirect to a page displaying dealer details or handle as required
+    return redirect('dealer_details', dealer_id=dealer_id)
