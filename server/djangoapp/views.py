@@ -44,7 +44,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     # Redirect to a page after logout, for example, the home page
-    return redirect('djangoapp/index.html')
+    return redirect('djangoapp:home')
 
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):
