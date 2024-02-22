@@ -7,12 +7,48 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
-    <body>
+<body>
 
-    <!--Add a nav bar here -->
+<!-- Navigation bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Dealership Review</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'djangoapp:about' %}">About Us</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+      </li>
+    </ul>
+    {% if user.is_authenticated %}
+    <!-- If user is authenticated, show a link to add review -->
+    <a class="btn btn-outline-primary my-2 my-sm-0" href="{% url 'djangoapp:add_review' dealer_id %}">Add Review</a>
+    {% endif %}
+  </div>
+</nav>
 
-    <!-- Add reviews as cards -->
+<!-- Review cards -->
+<div class="container mt-5">
+  <div class="card-columns">
+    {% for review in reviews %}
+    <div class="card">
+      <img class="card-img-top" src="{% static 'emoji/positive.png' %}" alt="Review Sentiment">
+      <div class="card-body">
+        <h5 class="card-title">{{ review.car_model }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ review.car_make }}</h6>
+        <p class="card-text">{{ review.review }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
-    </body>
-
+</body>
 </html>
